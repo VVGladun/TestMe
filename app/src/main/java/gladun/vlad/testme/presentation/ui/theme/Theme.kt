@@ -17,13 +17,15 @@ import androidx.compose.ui.platform.LocalContext
 
 // region Material Theme
 //TODO: Modify default Material colors according to the company's style guide
-private val DarkColorScheme = darkColorScheme()
+private val DarkColorScheme = darkColorScheme(
+    primary = Tasman500,
+    secondary = Feijoa500,
+)
 
 private val LightColorScheme = lightColorScheme(
-
+    primary = Tasman500,
+    secondary = Feijoa500,
     /* Some default colors to override
-    primary = Purple40,
-    secondary = PurpleGrey40,
     tertiary = Pink40,
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
@@ -41,6 +43,7 @@ private val LightColorScheme = lightColorScheme(
 data class CustomColorScheme(
     val textNormalEmphasis: Color = Color.Unspecified,
     val textLowEmphasis: Color = Color.Unspecified,
+    val toolbarActionColor: Color = Color.Unspecified,
     val selectedTabTextColor: Color = Color.Unspecified,
     val unselectedTabTextColor: Color = Color.Unspecified,
 )
@@ -49,6 +52,7 @@ data class CustomColorScheme(
 private val lightCustomTheme = CustomColorScheme(
     textNormalEmphasis = BluffOyster800,
     textLowEmphasis = BluffOyster600,
+    toolbarActionColor = Tasman500,
     selectedTabTextColor = Tasman500,
     unselectedTabTextColor = BluffOyster600
 )
@@ -56,6 +60,7 @@ private val lightCustomTheme = CustomColorScheme(
 private val darkCustomTheme = CustomColorScheme(
     textNormalEmphasis = Color.White,
     textLowEmphasis = Color.LightGray,
+    toolbarActionColor = Tasman500,
     selectedTabTextColor = Tasman500,
     unselectedTabTextColor = Color.LightGray
 )

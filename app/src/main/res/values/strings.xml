@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Test Me</string>
+
+    <string name="tab_latest_listings">Discover</string>
+    <string name="tab_watchlist">Watchlist</string>
+    <string name="tab_my_trade_me">My Trade Me</string>
+
+    <string name="screen_title_latest">Latest Listings</string>
+    <string name="screen_title_watchlist">Watchlist</string>
+    <string name="screen_title_my_trade_me">My Trade Me</string>
+
+
+    <string name="acc_search_icon">Search</string>
+    <string name="acc_cart_icon">My Cart</string>
 </resources>
