@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import gladun.vlad.testme.R
 import gladun.vlad.testme.domain.model.Listing
 import gladun.vlad.testme.presentation.ui.components.TopBarAction
@@ -26,6 +27,8 @@ import gladun.vlad.testme.presentation.ui.showToast
 fun LatestListingsScreen(
     modifier: Modifier = Modifier
 ) {
+    val latestListingsViewModel: LatestListingsViewModel = hiltViewModel()
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val context = LocalContext.current
     Scaffold(

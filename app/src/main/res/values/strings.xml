@@ -9,6 +9,10 @@
     <string name="screen_title_watchlist">Watchlist</string>
     <string name="screen_title_my_trade_me">My Trade Me</string>
 
+    <string name="error_generic_title">Something went wrong</string>
+    <string name="error_generic_message">Please check your internet connection and try again.</string>
+    <string name="error_retry">Retry</string>
+    <string name="error_dismiss">Dismiss</string>
 
     <string name="acc_search_icon">Search</string>
     <string name="acc_cart_icon">My Cart</string>

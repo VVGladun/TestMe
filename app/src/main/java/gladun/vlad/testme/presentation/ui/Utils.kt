@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
+import gladun.vlad.testme.domain.model.UiText
 
 fun Context.showToast(text: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, text, duration).show()
@@ -22,3 +23,5 @@ fun PaddingValues.copyPaddings(
 ): PaddingValues {
     return PaddingValues(start = start, top = top, end = end, bottom = bottom)
 }
+
+fun Int.toUiText() = UiText.StringResource(this)
