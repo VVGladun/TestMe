@@ -25,10 +25,10 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = Tasman500,
     secondary = Feijoa500,
+    onSurface = BluffOyster800,
+    onBackground = BluffOyster800,
     /* Some default colors to override
     tertiary = Pink40,
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
@@ -43,7 +43,7 @@ private val LightColorScheme = lightColorScheme(
 data class CustomColorScheme(
     val textNormalEmphasis: Color = Color.Unspecified,
     val textLowEmphasis: Color = Color.Unspecified,
-    val toolbarActionColor: Color = Color.Unspecified,
+    val actionColor: Color = Color.Unspecified,
     val selectedTabTextColor: Color = Color.Unspecified,
     val unselectedTabTextColor: Color = Color.Unspecified,
 )
@@ -52,7 +52,7 @@ data class CustomColorScheme(
 private val lightCustomTheme = CustomColorScheme(
     textNormalEmphasis = BluffOyster800,
     textLowEmphasis = BluffOyster600,
-    toolbarActionColor = Tasman500,
+    actionColor = Tasman500,
     selectedTabTextColor = Tasman500,
     unselectedTabTextColor = BluffOyster600
 )
@@ -60,7 +60,7 @@ private val lightCustomTheme = CustomColorScheme(
 private val darkCustomTheme = CustomColorScheme(
     textNormalEmphasis = Color.White,
     textLowEmphasis = Color.LightGray,
-    toolbarActionColor = Tasman500,
+    actionColor = Tasman500,
     selectedTabTextColor = Tasman500,
     unselectedTabTextColor = Color.LightGray
 )

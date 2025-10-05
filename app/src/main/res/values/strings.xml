@@ -14,6 +14,10 @@
     <string name="error_retry">Retry</string>
     <string name="error_dismiss">Dismiss</string>
 
+    <string name="empty_content_message">There is no data available at the moment. \nPlease try again later.</string>
+    <string name="empty_content_retry">Try again</string>
+
+
     <string name="acc_search_icon">Search</string>
     <string name="acc_cart_icon">My Cart</string>
 </resources>

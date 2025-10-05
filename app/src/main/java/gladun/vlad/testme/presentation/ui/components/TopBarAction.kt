@@ -14,7 +14,7 @@ import gladun.vlad.testme.presentation.ui.theme.LocalCustomTheme
 fun TopBarAction(
     @DrawableRes iconResId: Int,
     @StringRes description: Int,
-    tintColor: Color = LocalCustomTheme.current.toolbarActionColor,
+    tintColor: Color = LocalCustomTheme.current.actionColor,
     onClick: () -> Unit
 ) {
     IconButton(onClick = onClick) {
