@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -57,11 +58,13 @@ import coil3.compose.AsyncImage
 import gladun.vlad.testme.R
 import gladun.vlad.testme.domain.model.Listing
 import gladun.vlad.testme.domain.model.LoadingState
+import gladun.vlad.testme.domain.model.ScreenLceState
 import gladun.vlad.testme.presentation.ui.components.TestMeAlertDialog
 import gladun.vlad.testme.presentation.ui.components.TopBarAction
 import gladun.vlad.testme.presentation.ui.copyPaddings
 import gladun.vlad.testme.presentation.ui.showToast
 import gladun.vlad.testme.presentation.ui.theme.LocalCustomTheme
+import gladun.vlad.testme.presentation.ui.theme.TestMeTheme
 import gladun.vlad.testme.presentation.ui.theme.spacing
 import gladun.vlad.testme.presentation.ui.toDollarsAndCents
 
@@ -72,15 +75,47 @@ fun LatestListingsScreen(
 ) {
     val viewModel: LatestListingsViewModel = hiltViewModel()
     val state = viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
-    val content = state.value.content.orEmpty()
-    val isRefreshingOrLoading = state.value.loading !is LoadingState.None
+    LatestListingsScreenContent(
+        modifier = modifier,
+        uiState = state.value,
+        onPullToRefresh = {
+            viewModel.onPullToRefresh()
+        },
+        onErrorDialogRetry = {
+            viewModel.onErrorDialogRetry()
+        },
+        onErrorDialogDismiss = {
+            viewModel.onErrorDialogDismiss()
+        },
+        onCartClick = {
+            context.showToast("TODO: Cart screen")
+        },
+        onSearchClick = {
+            context.showToast("TODO: Search screen")
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LatestListingsScreenContent(
+    modifier: Modifier = Modifier,
+    uiState: ScreenLceState<List<Listing>>,
+    onPullToRefresh: () -> Unit = {},
+    onErrorDialogRetry: () -> Unit = {},
+    onErrorDialogDismiss: () -> Unit = {},
+    onSearchClick: () -> Unit = {},
+    onCartClick: () -> Unit = {}
+) {
+    val isRefreshingOrLoading = uiState.loading !is LoadingState.None
+    val content = uiState.content.orEmpty()
 
     val listState = rememberLazyListState()
     val pullRefreshState = rememberPullToRefreshState()
-
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val context = LocalContext.current
+
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -95,13 +130,13 @@ fun LatestListingsScreen(
                         iconResId = R.drawable.ic_search,
                         description = R.string.acc_search_icon
                     ) {
-                        context.showToast("TODO: Search screen")
+                        onSearchClick()
                     }
                     TopBarAction(
                         iconResId = R.drawable.ic_cart,
                         description = R.string.acc_cart_icon
                     ) {
-                        context.showToast("TODO: Cart screen")
+                        onCartClick()
                     }
                 },
                 scrollBehavior = scrollBehavior,
@@ -110,8 +145,8 @@ fun LatestListingsScreen(
     ) { values ->
         PullToRefreshBox(
             isRefreshing = isRefreshingOrLoading,
-            onRefresh = { viewModel.onPullToRefresh() },
-            modifier = Modifier.fillMaxSize(), // we already set the bottom nav bar related paddings in the host
+            onRefresh = { onPullToRefresh() },
+            modifier = Modifier.fillMaxSize(),
             state = pullRefreshState,
             indicator = {
                 Indicator(
@@ -128,30 +163,31 @@ fun LatestListingsScreen(
             if (content.isNotEmpty()) {
                 ListContent(
                     content = content,
-                    contentPadding = values.copyPaddings(bottom = 0.dp),
+                    contentPadding = values.copyPaddings(bottom = 0.dp), // we already set the bottom nav bar related paddings in the host
                     listState = listState
                 )
             } else if (!isRefreshingOrLoading) {
                 EmptyResultScreen(onRetry = {
-                    viewModel.onErrorDialogRetry()
+                    onErrorDialogRetry()
                 })
             }
         }
-        if (state.value.loading is LoadingState.None) {
-            state.value.error?.let {
+
+        if (uiState.loading is LoadingState.None) {
+            uiState.error?.let {
                 TestMeAlertDialog(
                     dialogTitle = it.title,
                     dialogMessage = it.message,
                     primaryLabel = it.primaryActionLabel,
                     secondaryLabel = it.secondaryActionLabel,
                     onPrimaryAction = {
-                        viewModel.onErrorDialogRetry()
+                        onErrorDialogRetry()
                     },
                     onSecondaryAction = {
-                        viewModel.onErrorDialogDismiss()
+                        onErrorDialogDismiss()
                     },
                     onDismiss = {
-                        viewModel.onErrorDialogDismiss()
+                        onErrorDialogDismiss()
                     }
                 )
             }
@@ -206,6 +242,12 @@ fun EmptyResultScreen(
             modifier = Modifier
                 .wrapContentWidth()
                 .padding(8.dp),
+            colors = ButtonColors(
+                containerColor = LocalCustomTheme.current.actionColor,
+                disabledContainerColor = Color.Gray,
+                contentColor = Color.White,
+                disabledContentColor = Color.White
+            )
         ) {
             Icon(
                 imageVector = Icons.Default.Refresh,
@@ -215,24 +257,13 @@ fun EmptyResultScreen(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = retryButtonText,
-                color = LocalCustomTheme.current.actionColor
             )
         }
     }
 }
 
 @Composable
-@Preview
-fun ListingItem(listing: Listing = Listing(
-    listingId = "test01",
-    title = "Some title",
-    location = "Christchurch",
-    imageUrl = "some url",
-    buyNowPrice = 5014.89,
-    displayPrice = "$1234.87",
-    isClassified = false,
-    reserveState = "Reserve Met"
-)) {
+fun ListingItem(listing: Listing) {
 
     Column(
         modifier = Modifier
@@ -359,3 +390,54 @@ fun ListingItem(listing: Listing = Listing(
         )
     }
 }
+
+// region Preview
+@Preview(showBackground = true, name = "Loading State")
+@Composable
+private fun LatestListingsScreenContent_LoadingPreview() {
+    TestMeTheme {
+        LatestListingsScreenContent(
+            uiState = ScreenLceState(
+                loading = LoadingState.Refreshing
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Empty State")
+@Composable
+private fun LatestListingsScreenContent_EmptyPreview() {
+    TestMeTheme {
+        LatestListingsScreenContent(
+            uiState = ScreenLceState(
+                loading = LoadingState.None,
+                content = emptyList()
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "With Content")
+@Composable
+private fun LatestListingsScreenContent_WithContentPreview() {
+    TestMeTheme {
+        LatestListingsScreenContent(
+            uiState = ScreenLceState(
+                loading = LoadingState.None,
+                content = listOf(
+                    Listing(
+                        listingId = "test01",
+                        title = "Some title",
+                        location = "Christchurch",
+                        imageUrl = "some url",
+                        buyNowPrice = 5014.89,
+                        displayPrice = "$1234.87",
+                        isClassified = false,
+                        reserveState = "Reserve Met"
+                    )
+                )
+            )
+        )
+    }
+}
+// endregion

@@ -6,8 +6,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
+import gladun.vlad.testme.R
 import gladun.vlad.testme.domain.model.UiText
 import gladun.vlad.testme.presentation.ui.theme.LocalCustomTheme
+import gladun.vlad.testme.presentation.ui.theme.TestMeTheme
 import gladun.vlad.testme.presentation.ui.toText
 
 @Composable
@@ -54,7 +57,7 @@ fun TestMeAlertDialog(
                 }
             ) {
                 Text(
-                    text = primaryLabel.toText(),
+                    text = primaryLabel.toText().uppercase(),
                     color = LocalCustomTheme.current.actionColor
                 )
             }
@@ -67,11 +70,27 @@ fun TestMeAlertDialog(
                     }
                 ) {
                     Text(
-                        text = secondaryLabel.toText(),
+                        text = secondaryLabel.toText().uppercase(),
                         color = LocalCustomTheme.current.actionColor
                     )
                 }
             }
         }
     )
+}
+
+@Preview
+@Composable
+private fun previewDialog() {
+    TestMeTheme {
+        TestMeAlertDialog(
+            dialogTitle = UiText.StringResource(R.string.error_generic_title),
+            dialogMessage = UiText.StringResource(R.string.error_generic_message),
+            primaryLabel = UiText.StringResource(R.string.error_retry),
+            secondaryLabel = UiText.StringResource(R.string.error_dismiss),
+            onPrimaryAction = {},
+            onSecondaryAction = {},
+            onDismiss = {},
+        )
+    }
 }
