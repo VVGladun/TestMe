@@ -28,4 +28,9 @@ and a cleaner business logic driven structure in our domain layer.
 
 I decided not to spent a lot of time on creating a proper style guide system.
 Instead, I am left the default template material theme pretty much as is and just added some simple extension for spacing 
-and created a (composition local provided) theme with a few custom colors to demonstrate different common approaches in Compose codebases 
+and created a (composition local provided) theme with a few custom colors to demonstrate different common approaches in Compose codebases
+
+<div align="center">
+    <img src="screenshots/main.png" width="300" />
+    <img src="screenshots/error.png" width="300" />
+</div>
