@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -88,6 +89,7 @@ class LatestListingsViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 if (e !is CancellationException) {
+                    Timber.e(e)
                     _uiState.update {
                         it.copy(
                             error = ErrorData(

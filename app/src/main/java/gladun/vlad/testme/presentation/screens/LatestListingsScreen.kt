@@ -1,6 +1,7 @@
 package gladun.vlad.testme.presentation.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -94,6 +95,9 @@ fun LatestListingsScreen(
         },
         onSearchClick = {
             context.showToast("TODO: Search screen")
+        },
+        onItemSelected = {
+            context.showToast("Selected item ${it.listingId} (TODO: implement)")
         }
     )
 }
@@ -107,7 +111,8 @@ fun LatestListingsScreenContent(
     onErrorDialogRetry: () -> Unit = {},
     onErrorDialogDismiss: () -> Unit = {},
     onSearchClick: () -> Unit = {},
-    onCartClick: () -> Unit = {}
+    onCartClick: () -> Unit = {},
+    onItemSelected: (Listing) -> Unit = {},
 ) {
     val isRefreshingOrLoading = uiState.loading !is LoadingState.None
     val content = uiState.content.orEmpty()
@@ -164,7 +169,10 @@ fun LatestListingsScreenContent(
                 ListContent(
                     content = content,
                     contentPadding = values.copyPaddings(bottom = 0.dp), // we already set the bottom nav bar related paddings in the host
-                    listState = listState
+                    listState = listState,
+                    onItemSelected = {
+                        onItemSelected(it)
+                    }
                 )
             } else if (!isRefreshingOrLoading) {
                 EmptyResultScreen(onRetry = {
@@ -200,7 +208,8 @@ private fun ListContent(
     modifier: Modifier = Modifier,
     content: List<Listing>,
     contentPadding: PaddingValues,
-    listState: LazyListState
+    listState: LazyListState,
+    onItemSelected: (Listing) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -209,7 +218,12 @@ private fun ListContent(
         state = listState
     ) {
         items(content, key = {it.listingId}) {
-            ListingItem(listing = it)
+            ListingItem(
+                listing = it,
+                onItemSelected = {
+                    onItemSelected(it)
+                }
+            )
         }
     }
 }
@@ -263,12 +277,20 @@ fun EmptyResultScreen(
 }
 
 @Composable
-fun ListingItem(listing: Listing) {
+fun ListingItem(
+    listing: Listing,
+    onItemSelected: () -> Unit = {}
+) {
 
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surfaceBright)
-            .wrapContentSize(),
+            .wrapContentSize()
+            .clickable(
+                onClick = {
+                    onItemSelected()
+                }
+            ),
     ) {
         Row(
             modifier = Modifier
@@ -283,7 +305,7 @@ fun ListingItem(listing: Listing) {
                 model = listing.imageUrl,
                 contentDescription = "Listing image for ${listing.title}",
                 modifier = Modifier
-                    .width(80.dp)
+                    .width(MaterialTheme.spacing.thumbnailImage)
                     .aspectRatio(1f)
                     .clip(RoundedCornerShape(MaterialTheme.spacing.xSmall))
                     .background(Color.LightGray),

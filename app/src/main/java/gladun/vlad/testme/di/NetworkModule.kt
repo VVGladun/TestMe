@@ -6,8 +6,11 @@ import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import gladun.vlad.testme.BuildConfig
 import gladun.vlad.testme.data.network.AuthInterceptor
 import gladun.vlad.testme.data.network.CommonInterceptor
+import gladun.vlad.testme.data.network.JsonAdapters
+import gladun.vlad.testme.data.network.LatestListingService
 import gladun.vlad.testme.utils.Constants
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -22,7 +25,8 @@ object NetworkModule {
     @Provides
     @Reusable
     fun provideMoshi(): Moshi = Moshi.Builder()
-        .build() //TODO: add adapters if needed
+        .add(JsonAdapters())
+        .build()
 
     @Provides
     @Reusable
@@ -48,7 +52,18 @@ object NetworkModule {
         .addInterceptor(AuthInterceptor())
         .build()
 
-    //TODO: inject services
+    @Provides
+    @Reusable
+    fun provideLatestListingService(
+        retrofitBuilder: Retrofit.Builder,
+        @AuthHttpClient okHttpClient: OkHttpClient
+    ): LatestListingService {
+        return retrofitBuilder
+            .baseUrl(BuildConfig.BASE_API_URL)
+            .client(okHttpClient)
+            .build()
+            .create(LatestListingService::class.java)
+    }
 }
 
 @Qualifier
