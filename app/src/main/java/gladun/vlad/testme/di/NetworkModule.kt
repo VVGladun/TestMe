@@ -6,6 +6,8 @@ import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import gladun.vlad.testme.data.network.AuthInterceptor
+import gladun.vlad.testme.data.network.CommonInterceptor
 import gladun.vlad.testme.utils.Constants
 import okhttp3.Cache
 import okhttp3.OkHttpClient
